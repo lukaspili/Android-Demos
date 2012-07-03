@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+    <!-- Buttons are placed at the bottom of the screen -->
+    <LinearLayout android:id="@+id/buttons"
+                  android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:orientation="horizontal">
+
+        <Button android:layout_width="fill_parent" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button 1"/>
+
+        <Button android:layout_width="fill_parent" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button 1"/>
+    </LinearLayout>
+
+    <!-- The content above the buttons is declared after, question of priority -->
+    <TextView android:id="@+id/text"
+              android:layout_width="fill_parent" android:layout_height="wrap_content"
+              android:layout_alignParentTop="true"
+              android:text="Content"/>
+
+    <!-- Other content, etc... -->
+
+    <!-- The last element juste above the buttons must contain the "layout_above" attribute -->
+    <ListView android:layout_width="fill_parent" android:layout_height="fill_parent"
+              android:layout_below="@id/text"
+              android:layout_above="@id/buttons"/>
+
+</RelativeLayout>
