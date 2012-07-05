@@ -6,9 +6,9 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.siu.android.andutils.model.DemoModel;
 import com.siu.android.demos.R;
 import com.siu.android.demos.adapter.DemoAdapter;
+import com.siu.android.demos.model.DemoModel;
 import com.siu.android.demos.task.DemoTask;
 
 import java.util.ArrayList;

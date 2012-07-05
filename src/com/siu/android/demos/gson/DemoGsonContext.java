@@ -2,7 +2,7 @@ package com.siu.android.demos.gson;
 
 import com.google.gson.GsonBuilder;
 import com.siu.android.andutils.gson.GsonContext;
-import com.siu.android.andutils.model.DemoModel;
+import com.siu.android.demos.model.DemoModel;
 
 /**
  * @author Lukasz Piliszczuk <lukasz.pili AT gmail.com>

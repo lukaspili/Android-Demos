@@ -3,12 +3,11 @@ package com.siu.android.demos.task;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.google.gson.reflect.TypeToken;
-import com.siu.android.andutils.gson.GsonContext;
-import com.siu.android.andutils.model.DemoModel;
 import com.siu.android.andutils.util.HttpUtils;
 import com.siu.android.andutils.util.NetworkUtils;
 import com.siu.android.demos.activity.DemoActivity;
 import com.siu.android.demos.gson.DemoGsonContext;
+import com.siu.android.demos.model.DemoModel;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -49,12 +48,12 @@ public class DemoTask extends AsyncTask<Void, Void, List<DemoModel>> {
     }
 
     @Override
-    protected void onPostExecute(List<DemoModel> strings) {
+    protected void onPostExecute(List<DemoModel> demoModels) {
         if (null == activity) {
             return;
         }
 
-        activity.onDemoTaskFinished(strings);
+        activity.onDemoTaskFinished(demoModels);
     }
 
     public void setActivity(DemoActivity activity) {

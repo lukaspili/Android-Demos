@@ -2,7 +2,7 @@ package com.siu.android.demos.gson;
 
 import com.google.gson.*;
 import com.siu.android.andutils.gson.CommonDeserializer;
-import com.siu.android.andutils.model.DemoModel;
+import com.siu.android.demos.model.DemoModel;
 
 import java.lang.reflect.Type;
 

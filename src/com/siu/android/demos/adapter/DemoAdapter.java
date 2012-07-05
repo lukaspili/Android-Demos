@@ -2,8 +2,8 @@ package com.siu.android.demos.adapter;
 
 import android.content.Context;
 import com.siu.android.andutils.adapter.SimpleAdapter;
-import com.siu.android.andutils.model.DemoModel;
 import com.siu.android.demos.R;
+import com.siu.android.demos.model.DemoModel;
 
 import java.util.List;
 
