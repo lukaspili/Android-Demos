@@ -6,7 +6,9 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.siu.android.andutils.model.DemoModel;
 import com.siu.android.demos.R;
+import com.siu.android.demos.adapter.DemoAdapter;
 import com.siu.android.demos.task.DemoTask;
 
 import java.util.ArrayList;
@@ -15,9 +17,9 @@ import java.util.List;
 public class DemoActivity extends Activity {
 
     private ListView listView;
-    private ArrayAdapter<String> listAdapter;
+    private ArrayAdapter<DemoModel> listAdapter;
 
-    private List<String> strings;
+    private List<DemoModel> demoModels;
     private DemoTask demoTask;
 
     @Override
@@ -36,9 +38,9 @@ public class DemoActivity extends Activity {
         demoTask = (DemoTask) getLastNonConfigurationInstance();
 
         if (null == demoTask) {
-            strings = new ArrayList<String>();
+            demoModels = new ArrayList<DemoModel>();
         } else {
-            strings = (List<String>) savedInstanceState.get("list");
+            demoModels = (List<DemoModel>) savedInstanceState.get("list");
             demoTask.setActivity(this);
         }
 
@@ -49,13 +51,13 @@ public class DemoActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
-        if (strings.isEmpty() && null == demoTask) {
+        if (demoModels.isEmpty() && null == demoTask) {
             startDemoTask();
         }
     }
 
     private void initList() {
-        listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, strings);
+        listAdapter = new DemoAdapter(this, demoModels);
         listView.setAdapter(listAdapter);
     }
 
@@ -65,7 +67,7 @@ public class DemoActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("list", (ArrayList<String>) strings);
+        outState.putSerializable("list", (ArrayList<DemoModel>) demoModels);
     }
 
     @Override
@@ -107,24 +109,24 @@ public class DemoActivity extends Activity {
         demoTask = null;
     }
 
-    public void onDemoTaskFinished(List<String> stringsLoaded) {
+    public void onDemoTaskFinished(List<DemoModel> demoModelLoaded) {
         stopDemoTaskIfRunning();
 
-        if (null == stringsLoaded) {
+        if (null == demoModelLoaded) {
             Toast.makeText(this, "Impossible de récupérer les informations du flux", Toast.LENGTH_LONG).show();
             return;
         }
 
-        if (stringsLoaded.isEmpty()) {
+        if (demoModelLoaded.isEmpty()) {
             Toast.makeText(this, "Le flux est vide", Toast.LENGTH_LONG).show();
             return;
         }
 
         // clear previous content from list
-        strings.clear();
+        demoModels.clear();
 
         // and add the new loaded content
-        strings.addAll(stringsLoaded);
+        demoModels.addAll(demoModelLoaded);
 
         // notifiy list adapter that content changed
         listAdapter.notifyDataSetChanged();

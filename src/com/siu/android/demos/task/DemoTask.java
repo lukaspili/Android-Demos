@@ -1,11 +1,14 @@
 package com.siu.android.demos.task;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import com.google.gson.reflect.TypeToken;
+import com.siu.android.andutils.gson.GsonContext;
+import com.siu.android.andutils.model.DemoModel;
+import com.siu.android.andutils.util.HttpUtils;
+import com.siu.android.andutils.util.NetworkUtils;
 import com.siu.android.demos.activity.DemoActivity;
-import com.siu.android.demos.gson.GsonFormatter;
-import com.siu.android.demos.util.NetworkUtils;
-import com.siu.android.demos.util.UrlUtils;
+import com.siu.android.demos.gson.DemoGsonContext;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -13,7 +16,7 @@ import java.util.List;
 /**
  * @author Lukasz Piliszczuk <lukasz.pili AT gmail.com>
  */
-public class DemoTask extends AsyncTask<Void, Void, List<String>> {
+public class DemoTask extends AsyncTask<Void, Void, List<DemoModel>> {
 
     private DemoActivity activity;
 
@@ -22,7 +25,7 @@ public class DemoTask extends AsyncTask<Void, Void, List<String>> {
     }
 
     @Override
-    protected List<String> doInBackground(Void... voids) {
+    protected List<DemoModel> doInBackground(Void... voids) {
 
         // if no network available, then stop
         if (!NetworkUtils.isOnline()) {
@@ -30,19 +33,23 @@ public class DemoTask extends AsyncTask<Void, Void, List<String>> {
         }
 
         // download data
-        String data = UrlUtils.downloadData("foobar");
+        String data = HttpUtils.get("http://frequencesradio.heroku.com/api/radios");
 
         if (StringUtils.isEmpty(data)) {
             return null;
         }
 
         // parse it as list
-        return GsonFormatter.getGson().fromJson(data, new TypeToken<List<String>>() {
-        }.getType());
+        try {
+            return DemoGsonContext.getInstance().getGson().fromJson(data, new TypeToken<List<DemoModel>>() {}.getType());
+        } catch (Exception e) {
+            Log.e(getClass().getName(), "Error parsing json", e);
+            return null;
+        }
     }
 
     @Override
-    protected void onPostExecute(List<String> strings) {
+    protected void onPostExecute(List<DemoModel> strings) {
         if (null == activity) {
             return;
         }
