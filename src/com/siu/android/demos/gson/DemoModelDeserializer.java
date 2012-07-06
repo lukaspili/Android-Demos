@@ -1,5 +1,6 @@
 package com.siu.android.demos.gson;
 
+import android.util.Log;
 import com.google.gson.*;
 import com.siu.android.andutils.gson.CommonDeserializer;
 import com.siu.android.demos.model.DemoModel;

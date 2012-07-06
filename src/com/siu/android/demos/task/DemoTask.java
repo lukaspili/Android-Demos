@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.siu.android.andutils.util.HttpUtils;
 import com.siu.android.andutils.util.NetworkUtils;
 import com.siu.android.demos.activity.DemoActivity;
-import com.siu.android.demos.gson.DemoGsonContext;
+import com.siu.android.demos.gson.GsonHelper;
 import com.siu.android.demos.model.DemoModel;
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,7 +40,7 @@ public class DemoTask extends AsyncTask<Void, Void, List<DemoModel>> {
 
         // parse it as list
         try {
-            return DemoGsonContext.getInstance().getGson().fromJson(data, new TypeToken<List<DemoModel>>() {}.getType());
+            return new GsonHelper().getGson().fromJson(data, new TypeToken<List<DemoModel>>() {}.getType());
         } catch (Exception e) {
             Log.e(getClass().getName(), "Error parsing json", e);
             return null;
