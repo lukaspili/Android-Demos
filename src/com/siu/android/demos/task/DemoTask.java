@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author Lukasz Piliszczuk <lukasz.pili AT gmail.com>
  */
-public class DemoTask extends AsyncTask<Void, Void, List<DemoModel>> {
+public class DemoTask extends AsyncTask<Void, List<DemoModel>, List<DemoModel>> {
 
     private DemoActivity activity;
     private SharedPreferences sharedPreferences;
@@ -33,17 +33,18 @@ public class DemoTask extends AsyncTask<Void, Void, List<DemoModel>> {
 
     @Override
     protected List<DemoModel> doInBackground(Void... voids) {
+        publishProgress(DatabaseHelper.getInstance().getDaoSession().getDemoModelDao().loadAll());
 
         // if no network available, then stop
         if (!NetworkUtils.isOnline()) {
-            return getLocal();
+            return null;
         }
 
         // download data
         String data = HttpUtils.get("http://frequencesradio.heroku.com/api/radios");
 
         if (StringUtils.isEmpty(data)) {
-            return getLocal();
+            return null;
         }
 
         // compare md5
@@ -51,14 +52,15 @@ public class DemoTask extends AsyncTask<Void, Void, List<DemoModel>> {
         final String currentMd5 = CryptoUtils.md5Hex(data);
 
         if (StringUtils.equals(existingMd5, currentMd5)) {
-            return getLocal();
+            return null;
         }
 
         final List<DemoModel> demoModels;
 
         // parse it as list
         try {
-            demoModels = new GsonHelper().getGson().fromJson(data, new TypeToken<List<DemoModel>>() {}.getType());
+            demoModels = new GsonHelper().getGson().fromJson(data, new TypeToken<List<DemoModel>>() {
+            }.getType());
         } catch (Exception e) {
             Log.e(getClass().getName(), "Error parsing json", e);
             return null;
@@ -89,8 +91,13 @@ public class DemoTask extends AsyncTask<Void, Void, List<DemoModel>> {
         return demoModels;
     }
 
-    private List<DemoModel> getLocal() {
-        return DatabaseHelper.getInstance().getDaoSession().getDemoModelDao().loadAll();
+    @Override
+    protected void onProgressUpdate(List<DemoModel>... values) {
+        if (null == activity) {
+            return;
+        }
+
+        activity.onDemoTaskProgress(values[0]);
     }
 
     @Override

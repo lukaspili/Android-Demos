@@ -1,11 +1,11 @@
 package com.siu.android.demos.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Window;
 import com.siu.android.demos.R;
 import com.siu.android.demos.adapter.DemoAdapter;
 import com.siu.android.demos.model.DemoModel;
@@ -14,7 +14,7 @@ import com.siu.android.demos.task.DemoTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemoActivity extends Activity {
+public class DemoActivity extends SherlockActivity {
 
     private ListView listView;
     private ArrayAdapter<DemoModel> listAdapter;
@@ -30,7 +30,7 @@ public class DemoActivity extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         // progress is shown by default, so disable it
-        setProgressBarIndeterminateVisibility(false);
+        setSupportProgressBarIndeterminateVisibility(false);
 
         setContentView(R.layout.main);
         listView = (ListView) findViewById(R.id.list);
@@ -91,7 +91,7 @@ public class DemoActivity extends Activity {
     private void startDemoTask() {
         stopDemoTaskIfRunning();
 
-        setProgressBarIndeterminateVisibility(true);
+        setSupportProgressBarIndeterminateVisibility(true);
         demoTask = new DemoTask(this);
         demoTask.execute();
     }
@@ -105,20 +105,15 @@ public class DemoActivity extends Activity {
             demoTask.cancel(true);
         }
 
-        setProgressBarIndeterminateVisibility(false);
+        setSupportProgressBarIndeterminateVisibility(false);
         demoTask = null;
     }
 
     public void onDemoTaskFinished(List<DemoModel> demoModelLoaded) {
         stopDemoTaskIfRunning();
 
-        if (null == demoModelLoaded) {
+        if (demoModels.isEmpty() && (null == demoModelLoaded || demoModelLoaded.isEmpty())) {
             Toast.makeText(this, "Impossible de récupérer les informations du flux", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (demoModelLoaded.isEmpty()) {
-            Toast.makeText(this, "Le flux est vide", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -132,4 +127,18 @@ public class DemoActivity extends Activity {
         listAdapter.notifyDataSetChanged();
     }
 
+    public void onDemoTaskProgress(List<DemoModel> demoModelsLoaded) {
+        if (null == demoModelsLoaded || demoModelsLoaded.isEmpty()) {
+            return;
+        }
+
+        // clear previous content from list
+        demoModels.clear();
+
+        // and add the new loaded content
+        demoModels.addAll(demoModelsLoaded);
+
+        // notifiy list adapter that content changed
+        listAdapter.notifyDataSetChanged();
+    }
 }
