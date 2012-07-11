@@ -112,8 +112,10 @@ public class DemoActivity extends SherlockActivity {
     public void onDemoTaskFinished(List<DemoModel> demoModelLoaded) {
         stopDemoTaskIfRunning();
 
-        if (demoModels.isEmpty() && (null == demoModelLoaded || demoModelLoaded.isEmpty())) {
-            Toast.makeText(this, "Impossible de récupérer les informations du flux", Toast.LENGTH_LONG).show();
+        if (null == demoModelLoaded || demoModelLoaded.isEmpty()) {
+            if (demoModels.isEmpty()) {
+                Toast.makeText(this, "Impossible de récupérer les informations du flux", Toast.LENGTH_LONG).show();
+            }
             return;
         }
 
